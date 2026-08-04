@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
+import DurationWheel from './DurationWheel.vue'
 import { formatDuration, parseDuration } from '../lib/time'
 import type { Segment } from '../types'
 
@@ -46,6 +47,16 @@ function onDurationBlur() {
   if (parsed !== null) raw.value = formatDuration(parsed)
 }
 
+const wheelOpen = ref(false)
+
+function onWheelApply(seconds: number) {
+  raw.value = formatDuration(seconds)
+  invalid.value = false
+  emit('invalid', false)
+  emit('update', { seconds })
+  wheelOpen.value = false
+}
+
 function autoGrow() {
   const el = textarea.value
   if (!el) return
@@ -81,6 +92,18 @@ onMounted(autoGrow)
         @input="onDurationInput"
         @blur="onDurationBlur"
       />
+
+      <button
+        type="button"
+        class="grid size-8 shrink-0 place-items-center rounded-lg text-app-muted"
+        aria-label="Pick duration"
+        @click="wheelOpen = true"
+      >
+        <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" stroke-linecap="round" />
+        </svg>
+      </button>
 
       <div class="ml-auto flex items-center gap-0.5">
         <button
@@ -127,6 +150,13 @@ onMounted(autoGrow)
       placeholder="Text to show…"
       class="mt-2 block w-full resize-none rounded-lg border border-app-line bg-app-bg px-3 py-2 text-base leading-snug outline-none focus:ring-2 focus:ring-app-faint"
       @input="onTextInput"
+    />
+
+    <DurationWheel
+      v-if="wheelOpen"
+      :seconds="segment.seconds"
+      @close="wheelOpen = false"
+      @apply="onWheelApply"
     />
   </li>
 </template>

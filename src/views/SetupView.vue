@@ -29,6 +29,10 @@ const invalidRows = reactive(new Set<string>())
 
 const hasInvalid = computed(() => invalidRows.size > 0)
 const hasText = computed(() => draft.value.segments.some((s) => s.text.trim().length > 0))
+/** Rows with something to say but no time on the clock never get shown. */
+const skipped = computed(
+  () => draft.value.segments.filter((s) => s.seconds === 0 && s.text.trim().length > 0).length,
+)
 const canPlay = computed(() => !hasInvalid.value && totalSeconds.value > 0)
 
 function setInvalid(id: string, value: boolean) {
@@ -188,6 +192,9 @@ function onPlay() {
             · {{ draft.segments.length }} {{ draft.segments.length === 1 ? 'row' : 'rows' }}
           </span>
           <span v-if="hasInvalid" class="block text-xs text-red-500">Fix the highlighted time</span>
+          <span v-else-if="skipped" class="block text-xs text-amber-600 dark:text-amber-400">
+            {{ skipped }} {{ skipped === 1 ? 'row has' : 'rows have' }} no time — will be skipped
+          </span>
           <span v-else-if="!hasText" class="block text-xs">Rows have no text yet</span>
         </div>
         <button
