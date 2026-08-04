@@ -184,8 +184,9 @@ function onPlay() {
       <div class="flex items-center gap-3 pb-3">
         <div class="min-w-0 flex-1 text-sm text-app-muted">
           <span class="tabular-nums">{{ formatHuman(totalSeconds) }}</span>
-          <span> · {{ draft.segments.length }} </span>
-          <span>{{ draft.segments.length === 1 ? 'row' : 'rows' }}</span>
+          <span>
+            · {{ draft.segments.length }} {{ draft.segments.length === 1 ? 'row' : 'rows' }}
+          </span>
           <span v-if="hasInvalid" class="block text-xs text-red-500">Fix the highlighted time</span>
           <span v-else-if="!hasText" class="block text-xs">Rows have no text yet</span>
         </div>
