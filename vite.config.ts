@@ -12,8 +12,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
-        name: 'phone-score',
-        short_name: 'score',
+        name: 'Score',
+        short_name: 'Score',
         description: 'Timed text cues — a countdown-driven score you can read from a phone.',
         start_url: '/',
         scope: '/',

@@ -123,7 +123,7 @@ const ratios = computed(() =>
       </section>
 
       <p class="mt-6 text-xs text-app-muted">
-        Colours and saved scripts live in this browser's local storage.
+        Colours and saved scores live in this browser's local storage.
       </p>
     </main>
   </div>

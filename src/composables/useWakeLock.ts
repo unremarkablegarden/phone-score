@@ -8,7 +8,7 @@ type WakeLockNavigator = Navigator & {
 /**
  * Keeps the screen on during playback. Support is patchy (older iOS in
  * particular) and the browser can reject at will, so every call is guarded —
- * a failure here must never interrupt the script.
+ * a failure here must never interrupt the score.
  */
 export function useWakeLock() {
   const active = ref(false)

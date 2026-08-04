@@ -4,7 +4,7 @@ export type Segment = {
   text: string
 }
 
-export type Script = {
+export type Score = {
   id: string
   name: string
   segments: Segment[]
@@ -13,7 +13,7 @@ export type Script = {
 
 /** The setup page's working state — persisted so a reload never loses edits. */
 export type Draft = {
-  /** id of the saved script this draft came from, or null for an unsaved one */
+  /** id of the saved score this draft came from, or null for an unsaved one */
   id: string | null
   name: string
   segments: Segment[]

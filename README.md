@@ -1,9 +1,9 @@
-# phone-score
+# Score
 
 A timed text score for a phone. Build a list of `(duration, text)` rows on the setup page, hit
 **Play**, and the app shows each text as large as it will fit with a countdown to the next one.
 
-Everything is client-side — scripts and colours live in `localStorage`. No backend, no accounts.
+Everything is client-side — scores and colours live in `localStorage`. No backend, no accounts.
 
 ## Run it
 
@@ -21,7 +21,7 @@ bun test           # duration parsing tests
 - **Text** is multi-line; your line breaks are preserved on the play screen.
 - Rows can be reordered, duplicated and deleted. Edits are auto-saved as a draft, so a reload
   never loses work.
-- **Save** overwrites the open script, **Save as…** makes a new one (and offers to overwrite on a
+- **Save** overwrites the open score, **Save as…** makes a new one (and offers to overwrite on a
   name clash), **Open…** lists everything saved.
 
 ## Play page

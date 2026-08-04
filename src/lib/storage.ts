@@ -8,7 +8,7 @@ const VERSION_KEY = PREFIX + 'v'
 const VERSION = 1
 
 export const KEYS = {
-  scripts: PREFIX + 'scripts',
+  scores: PREFIX + 'scores',
   settings: PREFIX + 'settings',
   draft: PREFIX + 'draft',
 } as const

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import ScriptPicker from '../components/ScriptPicker.vue'
+import ScorePicker from '../components/ScorePicker.vue'
 import SegmentRow from '../components/SegmentRow.vue'
-import { useScripts } from '../composables/useScripts'
+import { useScores } from '../composables/useScores'
 import { formatHuman } from '../lib/time'
 import type { Segment } from '../types'
 
@@ -22,7 +22,7 @@ const {
   removeSegment,
   duplicateSegment,
   moveSegment,
-} = useScripts()
+} = useScores()
 
 const pickerOpen = ref(false)
 const invalidRows = reactive(new Set<string>())
@@ -70,7 +70,7 @@ function onSave() {
 }
 
 function onSaveAs() {
-  const name = window.prompt('Save script as', draft.value.name || 'Untitled')
+  const name = window.prompt('Save score as', draft.value.name || 'Untitled')
   if (name === null) return
   const clash = findByName(name)
   if (clash && clash.id !== draft.value.id) {
@@ -99,8 +99,8 @@ function onPlay() {
           <input
             v-model="draft.name"
             type="text"
-            placeholder="Untitled script"
-            aria-label="Script name"
+            placeholder="Untitled score"
+            aria-label="Score name"
             class="w-full rounded-lg bg-transparent py-1 pr-4 text-lg font-semibold outline-none placeholder:text-app-faint"
           />
           <span
@@ -201,6 +201,6 @@ function onPlay() {
       </div>
     </footer>
 
-    <ScriptPicker v-if="pickerOpen" @close="pickerOpen = false" @open="onOpen" />
+    <ScorePicker v-if="pickerOpen" @close="pickerOpen = false" @open="onOpen" />
   </div>
 </template>

@@ -4,12 +4,12 @@ import { useRouter } from 'vue-router'
 import TimelineBar from '../components/TimelineBar.vue'
 import { useFitText } from '../composables/useFitText'
 import { usePlayer } from '../composables/usePlayer'
-import { useScripts } from '../composables/useScripts'
+import { useScores } from '../composables/useScores'
 import { useWakeLock } from '../composables/useWakeLock'
 import { formatCountdown } from '../lib/time'
 
 const router = useRouter()
-const { draft } = useScripts()
+const { draft } = useScores()
 
 const segments = computed(() => draft.value.segments.filter((s) => s.seconds > 0))
 
