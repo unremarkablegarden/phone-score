@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+
+/* Class-based dark mode — useSettings toggles `.dark` on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * The two source-of-truth colours. Defaults live here; useSettings only sets
+ * inline overrides on <html> when the user has explicitly picked a pair.
+ * Everything else in the UI is derived from them, so a custom pair recolours
+ * the whole app coherently.
+ */
+:root {
+  --app-bg: #fafaf9;
+  --app-fg: #1c1917;
+}
+
+.dark {
+  --app-bg: #0b0a09;
+  --app-fg: #f5f5f4;
+}
+
+/* `inline` so utilities compile to var(--app-bg) directly and follow runtime changes. */
+@theme inline {
+  --color-app-bg: var(--app-bg);
+  --color-app-fg: var(--app-fg);
+  --color-app-muted: color-mix(in oklab, var(--app-fg) 55%, var(--app-bg));
+  --color-app-faint: color-mix(in oklab, var(--app-fg) 22%, var(--app-bg));
+  --color-app-line: color-mix(in oklab, var(--app-fg) 14%, var(--app-bg));
+  --color-app-surface: color-mix(in oklab, var(--app-fg) 6%, var(--app-bg));
+  --color-app-raised: color-mix(in oklab, var(--app-fg) 11%, var(--app-bg));
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+html {
+  background-color: var(--app-bg);
+  color: var(--app-fg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  overscroll-behavior-y: none;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Safe-area helpers for the notch / home indicator in a fullscreen PWA. */
+@utility pad-safe {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+@utility pad-safe-x {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+@utility pad-safe-b {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility pad-safe-t {
+  padding-top: env(safe-area-inset-top);
+}
+
+input[type='color'] {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type='color']::-webkit-color-swatch {
+  border: none;
+  border-radius: 0.5rem;
+}
