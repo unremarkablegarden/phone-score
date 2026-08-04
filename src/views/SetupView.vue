@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import ImportDialog from '../components/ImportDialog.vue'
 import ScorePicker from '../components/ScorePicker.vue'
 import SegmentRow from '../components/SegmentRow.vue'
+import ToastHost from '../components/ToastHost.vue'
 import { useScores } from '../composables/useScores'
+import { useToast } from '../composables/useToast'
+import { copyText, readText } from '../lib/clipboard'
 import { formatHuman } from '../lib/time'
-import type { Segment } from '../types'
+import { decodeScore, encodeScore } from '../lib/transfer'
+import type { Draft, Segment } from '../types'
 
 const router = useRouter()
 const {
@@ -24,7 +29,10 @@ const {
   moveSegment,
 } = useScores()
 
+const { toast } = useToast()
+
 const pickerOpen = ref(false)
+const importOpen = ref(false)
 const invalidRows = reactive(new Set<string>())
 
 const hasInvalid = computed(() => invalidRows.size > 0)
@@ -85,6 +93,29 @@ function onSaveAs() {
     return
   }
   saveAs(name)
+}
+
+async function onExport() {
+  const ok = await copyText(await encodeScore(draft.value))
+  if (ok) toast('Score copied to clipboard')
+  else toast("Couldn't reach the clipboard", 'error')
+}
+
+async function onImport() {
+  if (!confirmDiscard()) return
+  // Try the clipboard first; fall back to a paste box if it's blocked or holds
+  // something that isn't a score.
+  const clipboard = await readText()
+  const parsed = clipboard ? await decodeScore(clipboard) : null
+  if (parsed) applyImport(parsed)
+  else importOpen.value = true
+}
+
+function applyImport(imported: Draft) {
+  invalidRows.clear()
+  draft.value = imported
+  importOpen.value = false
+  toast(`Imported “${imported.name || 'Untitled'}”`)
 }
 
 function onPlay() {
@@ -149,6 +180,13 @@ function onPlay() {
         <button type="button" class="rounded-lg bg-app-raised px-3 py-1.5" @click="onNew">
           New
         </button>
+        <span class="w-px shrink-0 self-stretch bg-app-line" aria-hidden="true" />
+        <button type="button" class="rounded-lg bg-app-raised px-3 py-1.5" @click="onExport">
+          Export
+        </button>
+        <button type="button" class="rounded-lg bg-app-raised px-3 py-1.5" @click="onImport">
+          Import
+        </button>
       </div>
     </header>
 
@@ -209,5 +247,7 @@ function onPlay() {
     </footer>
 
     <ScorePicker v-if="pickerOpen" @close="pickerOpen = false" @open="onOpen" />
+    <ImportDialog v-if="importOpen" @close="importOpen = false" @imported="applyImport" />
+    <ToastHost />
   </div>
 </template>
