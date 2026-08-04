@@ -21,8 +21,8 @@ export default defineConfig({
         display: 'fullscreen',
         display_override: ['fullscreen', 'standalone'],
         orientation: 'any',
-        background_color: '#0b0a09',
-        theme_color: '#0b0a09',
+        background_color: '#0e0d0c',
+        theme_color: '#0e0d0c',
         icons: [
           { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },

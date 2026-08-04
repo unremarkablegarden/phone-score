@@ -4,7 +4,7 @@ import type { ColorPair, Settings, Theme } from '../types'
 
 export const DEFAULTS: Record<'light' | 'dark', ColorPair> = {
   light: { fg: '#1c1917', bg: '#fafaf9' },
-  dark: { fg: '#f5f5f4', bg: '#0b0a09' },
+  dark: { fg: '#f5f5f4', bg: '#0e0d0c' },
 }
 
 function isSettings(v: unknown): v is Settings {

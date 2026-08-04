@@ -16,7 +16,7 @@ import sharp from 'sharp'
 import { readFileSync } from 'node:fs'
 
 const PUBLIC = new URL('../public/', import.meta.url).pathname
-const BG = '#0b0a09'
+const BG = '#0e0d0c'
 /** Keeps the art inside the maskable safe zone (centre 80%). */
 const SAFE_SCALE = 0.88
 

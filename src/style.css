@@ -12,22 +12,41 @@
 :root {
   --app-bg: #fafaf9;
   --app-fg: #1c1917;
+
+  /*
+   * How much foreground gets mixed into the background for each surface. These
+   * are per-mode because the same ratio doesn't read the same both ways: a few
+   * percent of near-black on near-white is clearly a panel, while the same few
+   * percent of near-white on near-black is invisible. Dark mode needs a bigger
+   * step to land at the same apparent separation.
+   */
+  --mix-muted: 55%;
+  --mix-faint: 22%;
+  --mix-line: 14%;
+  --mix-surface: 6%;
+  --mix-raised: 11%;
 }
 
 .dark {
-  --app-bg: #0b0a09;
+  --app-bg: #0e0d0c;
   --app-fg: #f5f5f4;
+
+  --mix-muted: 58%;
+  --mix-faint: 26%;
+  --mix-line: 17%;
+  --mix-surface: 8.5%;
+  --mix-raised: 14.5%;
 }
 
 /* `inline` so utilities compile to var(--app-bg) directly and follow runtime changes. */
 @theme inline {
   --color-app-bg: var(--app-bg);
   --color-app-fg: var(--app-fg);
-  --color-app-muted: color-mix(in oklab, var(--app-fg) 55%, var(--app-bg));
-  --color-app-faint: color-mix(in oklab, var(--app-fg) 22%, var(--app-bg));
-  --color-app-line: color-mix(in oklab, var(--app-fg) 14%, var(--app-bg));
-  --color-app-surface: color-mix(in oklab, var(--app-fg) 6%, var(--app-bg));
-  --color-app-raised: color-mix(in oklab, var(--app-fg) 11%, var(--app-bg));
+  --color-app-muted: color-mix(in oklab, var(--app-fg) var(--mix-muted), var(--app-bg));
+  --color-app-faint: color-mix(in oklab, var(--app-fg) var(--mix-faint), var(--app-bg));
+  --color-app-line: color-mix(in oklab, var(--app-fg) var(--mix-line), var(--app-bg));
+  --color-app-surface: color-mix(in oklab, var(--app-fg) var(--mix-surface), var(--app-bg));
+  --color-app-raised: color-mix(in oklab, var(--app-fg) var(--mix-raised), var(--app-bg));
 }
 
 html,
