@@ -15,7 +15,7 @@ const draft: Draft = {
 describe('encodeScore', () => {
   test('produces a single-line token', async () => {
     const token = await encodeScore(draft)
-    expect(token.startsWith('PS1.')).toBe(true)
+    expect(token.startsWith('PS1')).toBe(true)
     expect(token).not.toInclude('\n')
     expect(token).not.toInclude(' ')
     expect(token).not.toInclude('"')
@@ -60,6 +60,33 @@ describe('round trip', () => {
   })
 })
 
+describe('share links', () => {
+  test('a full link decodes', async () => {
+    const token = await encodeScore(draft)
+    const back = await decodeScore(`https://score.cyberspace.online/${token}`)
+    expect(back!.name).toBe('Box breathing')
+  })
+
+  test('the token is URL-safe, so the link needs no escaping', async () => {
+    const token = await encodeScore(draft)
+    expect(token).toBe(encodeURIComponent(token))
+  })
+
+  test('the router pattern matches the token it produces', async () => {
+    const token = await encodeScore(draft)
+    expect(/^PS1[A-Za-z0-9_-]+$/.test(token)).toBe(true)
+  })
+
+  test('a link with trailing whitespace from a paste decodes', async () => {
+    const token = await encodeScore(draft)
+    expect(await decodeScore(` https://score.cyberspace.online/${token} `)).not.toBeNull()
+  })
+
+  test('a link to something else is not a score', async () => {
+    expect(await decodeScore('https://score.cyberspace.online/settings')).toBeNull()
+  })
+})
+
 describe('hand-written JSON still imports', () => {
   test('verbose form', async () => {
     const back = await decodeScore('{"name":"Hi","segments":[{"seconds":3,"text":"Go"}]}')
@@ -90,7 +117,7 @@ describe('rejects what is not a score', () => {
     ['no segments', '{"name":"Hi","segments":[]}'],
     ['a negative duration', '{"s":[[-1,"Go"]]}'],
     ['a missing text', '{"s":[[5]]}'],
-    ['a corrupt token', 'PS1.notreallybase64!!'],
+    ['a corrupt token', 'PS1notreallybase64!!'],
   ])('%s', async (_label, input) => {
     expect(await decodeScore(input)).toBeNull()
   })

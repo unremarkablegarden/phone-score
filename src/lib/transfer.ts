@@ -3,19 +3,20 @@ import { uid, type Draft, type Segment } from '../types'
 /**
  * Share format for a score.
  *
- * The output is a single token — `PS1.` followed by base64url of the
- * deflated payload — because the thing people actually do with this is paste it
- * into a chat. One unbroken line with no quotes, braces or newlines survives
- * that trip; pretty-printed JSON does not (it gets wrapped, smart-quoted, or
- * swallowed by markdown).
+ * The output is a single token — `PS1` followed by base64url of the deflated
+ * payload — so it can be pasted straight into a URL path and shared as a link.
+ * One unbroken line of URL-safe characters survives a trip through a chat;
+ * pretty-printed JSON does not (it gets wrapped, smart-quoted, or swallowed by
+ * markdown). No dot in the prefix, so nothing upstream mistakes the path for a
+ * request for a file.
  *
  * The payload itself is minimal: `{n: name, s: [[seconds, text], ...]}`.
  *
- * Reading is deliberately lenient — the token, that same JSON, or the older
- * verbose `{segments: [{seconds, text}]}` shape all import, so a hand-written
- * score works too.
+ * Reading is deliberately lenient — a full share link, the bare token, that same
+ * JSON, or the verbose `{segments: [{seconds, text}]}` shape all import, so a
+ * hand-written score works too.
  */
-const PREFIX = 'PS1.'
+const PREFIX = 'PS1'
 
 type Payload = { n?: string; s: [number, string][] }
 
@@ -34,8 +35,13 @@ export async function encodeScore(draft: Draft): Promise<string> {
 }
 
 export async function decodeScore(input: string): Promise<Draft | null> {
-  const text = input.trim()
+  let text = input.trim()
   if (!text) return null
+
+  // A share link and a bare token are the same thing to us — take the last
+  // path segment, so pasting the whole URL works.
+  const link = /(?:^|\/)(PS1[A-Za-z0-9_-]+)$/.exec(text)
+  if (link) text = link[1]
 
   if (text.startsWith(PREFIX)) {
     const bytes = fromBase64Url(text.slice(PREFIX.length))
